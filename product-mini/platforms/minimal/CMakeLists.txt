@@ -32,7 +32,7 @@ endif ()
 if (NOT DEFINED WAMR_BUILD_AOT)
   # Enable AOT by default
   # Please install Intel SGX SDKv2.8 or later.
-  set (WAMR_BUILD_AOT 1)
+  set (WAMR_BUILD_AOT 0)
 endif ()
 
 if (NOT DEFINED WAMR_BUILD_JIT)
@@ -78,6 +78,10 @@ endif ()
 
 
 set (WAMR_BUILD_LIB_PTHREAD 0)
+
+set (WAMR_DISABLE_HW_BOUND_CHECK 0)
+
+# add_defintions(-DBH_VPRINTF=null)
 
 set (WAMR_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../..)
 

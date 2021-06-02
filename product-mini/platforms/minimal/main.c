@@ -122,3 +122,9 @@ int main(int argc, char const *argv[])
 
 
 }
+
+
+int null(const char *format, va_list ap)
+{
+    return 0;
+}
