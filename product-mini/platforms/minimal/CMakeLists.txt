@@ -20,9 +20,9 @@ if (NOT DEFINED WAMR_BUILD_TARGET)
   endif ()
 endif ()
 
-# if (NOT CMAKE_BUILD_TYPE)
-#   set(CMAKE_BUILD_TYPE Release)
-# endif ()
+if (NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif ()
 
 if (NOT DEFINED WAMR_BUILD_INTERP)
   # Enable Interpreter by default
@@ -61,10 +61,23 @@ if (NOT DEFINED WAMR_BUILD_MULTI_MODULE)
   set (WAMR_BUILD_MULTI_MODULE 0)
 endif ()
 
-if (NOT DEFINED WAMR_BUILD_LIB_PTHREAD)
-  # Enable pthread library by default
-  set (WAMR_BUILD_LIB_PTHREAD 0)
+if (NOT DEFINED WAMR_BUILD_MINI_LOADER)
+  # Disable wasm mini loader by default
+  set (WAMR_BUILD_MINI_LOADER 0)
 endif ()
+
+if (NOT DEFINED WAMR_BUILD_SIMD)
+  # Enable SIMD by default
+  set (WAMR_BUILD_SIMD 0)
+endif ()
+
+if (NOT DEFINED WAMR_BUILD_REF_TYPES)
+  # Disable reference types by default
+  set (WAMR_BUILD_REF_TYPES 0)
+endif ()
+
+
+set (WAMR_BUILD_LIB_PTHREAD 0)
 
 set (WAMR_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../..)
 
