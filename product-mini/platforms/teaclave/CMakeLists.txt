@@ -1,16 +1,14 @@
-# Copyright (C) 2019 Intel Corporation.  All rights reserved.
-# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-
 cmake_minimum_required (VERSION 2.8)
 
-project (iwasm)
+project(minimal)
 
-set (WAMR_BUILD_PLATFORM "linux-sgx")
+set (WAMR_BUILD_PLATFORM "teaclave")
 
 # Reset default linker flags
 set (CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
 set (CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
 
+# Steal from linux-sgx platform CMake file
 # Set WAMR_BUILD_TARGET
 if (NOT DEFINED WAMR_BUILD_TARGET)
   if (CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -34,7 +32,7 @@ endif ()
 if (NOT DEFINED WAMR_BUILD_AOT)
   # Enable AOT by default
   # Please install Intel SGX SDKv2.8 or later.
-  set (WAMR_BUILD_AOT 1)
+  set (WAMR_BUILD_AOT 0)
 endif ()
 
 if (NOT DEFINED WAMR_BUILD_JIT)
@@ -44,12 +42,13 @@ endif ()
 
 if (NOT DEFINED WAMR_BUILD_LIBC_BUILTIN)
   # Enable libc builtin support by default
-  set (WAMR_BUILD_LIBC_BUILTIN 1)
+  # Changed to 0 here
+  set (WAMR_BUILD_LIBC_BUILTIN 0)
 endif ()
 
 if (NOT DEFINED WAMR_BUILD_LIBC_WASI)
   # Enable libc wasi support by default
-  set (WAMR_BUILD_LIBC_WASI 1)
+  set (WAMR_BUILD_LIBC_WASI 0)
 endif ()
 
 if (NOT DEFINED WAMR_BUILD_FAST_INTERP)
@@ -62,34 +61,43 @@ if (NOT DEFINED WAMR_BUILD_MULTI_MODULE)
   set (WAMR_BUILD_MULTI_MODULE 0)
 endif ()
 
-if (NOT DEFINED WAMR_BUILD_LIB_PTHREAD)
-  # Enable pthread library by default
-  set (WAMR_BUILD_LIB_PTHREAD 1)
+if (NOT DEFINED WAMR_BUILD_MINI_LOADER)
+  # Disable wasm mini loader by default
+  set (WAMR_BUILD_MINI_LOADER 0)
 endif ()
 
 if (NOT DEFINED WAMR_BUILD_SIMD)
-  # Disable SIMD by default
+  # Enable SIMD by default
   set (WAMR_BUILD_SIMD 0)
 endif ()
 
-if (COLLECT_CODE_COVERAGE EQUAL 1)
-  set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
+if (NOT DEFINED WAMR_BUILD_REF_TYPES)
+  # Disable reference types by default
+  set (WAMR_BUILD_REF_TYPES 0)
 endif ()
 
-set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--gc-sections")
-set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99 -ffunction-sections -fdata-sections \
-                                     -Wall -Wno-unused-parameter -Wno-pedantic \
-                                     -nostdinc -fvisibility=hidden -fpie" )
+
+set (WAMR_BUILD_LIB_PTHREAD 0)
+
+# disabled for now, unsafe
+set (WAMR_DISABLE_HW_BOUND_CHECK 1)
+
+# nullify printf
+# set (BH_VPRINTF null)
 
 set (WAMR_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../..)
 
 include (${WAMR_ROOT_DIR}/build-scripts/runtime_lib.cmake)
 add_library(vmlib ${WAMR_RUNTIME_LIB_SOURCE})
 
-add_custom_command (
-             OUTPUT libvmlib_untrusted.a
-             COMMAND mkdir -p untrusted && cd untrusted &&
-                     ${CMAKE_C_COMPILER} -c ${PLATFORM_SHARED_SOURCE_UNTRUSTED}
-             COMMAND ${CMAKE_AR} rc libvmlib_untrusted.a untrusted/*.o)
+set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--gc-sections -pie -fPIE")
 
-add_custom_target (vmlib_untrusted ALL DEPENDS libvmlib_untrusted.a)
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wformat -Wformat-security")
+
+include (${SHARED_DIR}/utils/uncommon/shared_uncommon.cmake)
+
+add_executable (minimal main.c ${UNCOMMON_SHARED_SOURCE})
+
+# install (TARGETS minimal DESTINATION bin)
+
+target_link_libraries (minimal vmlib ${LLVM_AVAILABLE_LIBS} ${UV_A_LIBS} -lm -ldl -lpthread)
