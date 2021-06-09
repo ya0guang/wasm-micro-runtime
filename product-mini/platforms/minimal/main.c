@@ -94,18 +94,28 @@ int main(int argc, char const *argv[])
 
     // /*Call the main function of the WASM*/
     // int wasm_argc = 2;
-    // int wasm_argv[2] = {3, 4};
+    // char* wasm_argv[2] = {"2", "3"};
+    // printf("before exec: %d, %d, %s, %s\n", wasm_argv[0], wasm_argv[1], wasm_argv[0], wasm_argv[1]);
     // int ret = (int)wasm_application_execute_main(module_instance, wasm_argc, wasm_argv);
-    // printf("ret: %d\n", ret);
-    // printf("argv: %d, %d\n", wasm_argv[0], wasm_argv[1]);
-
+    // printf("after exec: %d, %d, %s, %s\n", wasm_argv[0], wasm_argv[1], wasm_argv[0], wasm_argv[1]);
 
 
     int wasm_argc = 2;
-    int wasm_argv[2] = {4, 5};
+    int entry_argc = 2;
+    char* entry_argv[2] = {"2", "3"};
+
+    int enrty_argv_dup[entry_argc];
+
+    for (int i = 0; i < entry_argc; i ++) {
+        enrty_argv_dup[i] = wasm_runtime_module_dup_data(module_instance, entry_argv[i], strlen(entry_argv[i]));
+    }
+    int enrty_argv_addr = wasm_runtime_module_dup_data(module_instance, enrty_argv_dup, sizeof(enrty_argv_dup));
+
+    int wasm_argv[] = {entry_argc, enrty_argv_addr};
+
     // lookup a WASM function by its name. 
     // The function signature can NULL here
-    void* func = wasm_runtime_lookup_function(module_instance, "entrypoint", NULL);
+    void* func = wasm_runtime_lookup_function(module_instance, "test", NULL);
     printf("func: %p\n", func);
 
     // creat a excution environment which can be used by executing WASM functions
@@ -114,7 +124,7 @@ int main(int argc, char const *argv[])
 
     if (wasm_runtime_call_wasm(exec_env, func, wasm_argc, wasm_argv) ) {
         /* the return value is stored in argv[0] */
-        printf("add function return: %d\n", wasm_argv[0]);
+        printf("test function return: %d\n", wasm_argv[0]);
     }
     else {
         printf("%s\n", wasm_runtime_get_exception(module_instance));
@@ -126,5 +136,6 @@ int main(int argc, char const *argv[])
 
 int null(const char *format, va_list ap)
 {
+    // vprintf(format, ap);
     return 0;
 }

@@ -4,7 +4,7 @@ int add(int a, int b) {
 
 int atoi(const char* str)
 {
-    int result = 0;
+    int result = 8888888;
     int sign = 0;
     // proc whitespace characters
     while (*str==' ' || *str=='\t' || *str=='\n')
@@ -42,8 +42,8 @@ int entrypoint(int a, int b) {
 int test(int argc, char *argv[]) {
     // os_printf("%s", argv[0]);
     // os_printf("%s", argv[1]);
-    // return argv;
-    return atoi(argv[0]);
+    return argv[0];
+    // return atoi(argv[1]);
 }
 
 int main(int argc, char *argv[])

@@ -82,7 +82,8 @@ set (WAMR_BUILD_LIB_PTHREAD 0)
 # disabled for now, unsafe
 set (WAMR_DISABLE_HW_BOUND_CHECK 1)
 
-# add_defintions(-DBH_VPRINTF=null)
+# nullify printf
+# set (BH_VPRINTF null)
 
 set (WAMR_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../..)
 

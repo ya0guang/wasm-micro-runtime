@@ -25,8 +25,8 @@ os_printf(const char *format, ...)
     va_start(ap, format);
 #ifndef BH_VPRINTF
     // ya0guang: also nullify here
-    return NULL;
-    // ret += vprintf(format, ap);
+    // return NULL;
+    ret += vprintf(format, ap);
 #else
     ret += BH_VPRINTF(format, ap);
 #endif
@@ -40,8 +40,8 @@ os_vprintf(const char *format, va_list ap)
 {
 #ifndef BH_VPRINTF
     // ya0guang: nullify printf
-    return 0;
-    // return vprintf(format, ap);
+    // return 0;
+    return vprintf(format, ap);
 #else
     return BH_VPRINTF(format, ap);
 #endif
