@@ -158,6 +158,13 @@ int os_mprotect(void *addr, size_t size, int prot)
     return (st == SGX_SUCCESS? 0:-1);
 }
 
+uint64
+os_time_get_boot_microsecond()
+{
+    /* TODO */
+    return 0;
+}
+
 void
 os_dcache_flush(void)
 {

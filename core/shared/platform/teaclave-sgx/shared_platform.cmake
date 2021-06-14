@@ -30,9 +30,4 @@ endif ()
 
 file (GLOB source_all ${PLATFORM_SHARED_DIR}/*.c)
 
-file (GLOB source_all_untrusted ${PLATFORM_SHARED_DIR}/untrusted/*.c)
-
 set (PLATFORM_SHARED_SOURCE ${source_all})
-
-set (PLATFORM_SHARED_SOURCE_UNTRUSTED ${source_all_untrusted})
-
