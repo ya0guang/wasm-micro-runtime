@@ -23,6 +23,8 @@
 #include <pthread.h>
 
 #include "sgx_error.h"
+#include "wasm_export.h"
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -53,6 +55,11 @@ char *strcpy(char *dest, const char *src);
 #ifdef __cplusplus
 }
 #endif
+
+/* Teaclave protected file system */
+uint32_t c_open_input(char* fid, int* out_handle);
+
+uint32_t teaclave_open(wasm_exec_env_t exec_env, char* fid, int* dummy);
 
 #endif /* end of _PLATFORM_INTERNAL_H */
 

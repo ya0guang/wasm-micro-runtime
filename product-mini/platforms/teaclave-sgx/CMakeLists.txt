@@ -80,3 +80,12 @@ set (WAMR_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../..)
 
 include (${WAMR_ROOT_DIR}/build-scripts/runtime_lib.cmake)
 add_library(vmlib ${WAMR_RUNTIME_LIB_SOURCE})
+
+
+# add_custom_command (
+#              OUTPUT libvmlib_untrusted.a
+#              COMMAND mkdir -p untrusted && cd untrusted &&
+#                      ${CMAKE_C_COMPILER} -c ${PLATFORM_SHARED_SOURCE_UNTRUSTED}
+#              COMMAND ${CMAKE_AR} rc libvmlib_untrusted.a untrusted/*.o)
+
+# add_custom_target (vmlib_untrusted ALL DEPENDS libvmlib_untrusted.a)
